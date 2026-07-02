@@ -54,9 +54,7 @@
         <div style="font-family: 'Inter', sans-serif; font-weight: 700; font-size: 36px; letter-spacing: -0.01em; color: #ffffff;">ATLAS</div>
       </div>
       <div style="font-size: 13px; color: rgba(255,255,255,.55); letter-spacing: .04em;">THE GLOBAL ADVERTISING MODEL — JUNE 2026 PREVIEW</div>
-      <div style="margin-left: auto; font-size: 13px; letter-spacing: .1em; color: rgba(255,255,255,.45); text-transform: uppercase;">Global overview — <span style="color: #ffffff; font-weight: 600;">{{ v2a.marketLabel }}</span></div>
-      <span style="font-size: 11px; letter-spacing: .16em; color: #e8c87a; border: 1px solid rgba(232,200,122,.45); padding: 4px 10px; border-radius: 3px;">CONFIDENTIAL</span>
-    </div>
+      <div style="margin-left: auto; font-size: 13px; letter-spacing: .1em; color: rgba(255,255,255,.45); text-transform: uppercase;">Global overview — <span style="color: #ffffff; font-weight: 600;">{{ v2a.marketLabel }}</span></div>    </div>
     <div style="display: grid; grid-template-columns: repeat(3,1fr); gap: 0; margin-bottom: 16px; border: 1px solid var(--om-border-soft); border-radius: var(--om-radius); overflow: hidden; background: rgba(8, 5, 22, 0.38);">
       <div style="padding: 14px 30px 14px 18px; border-right: 1px solid var(--om-border-soft); display: flex; align-items: baseline; gap: 14px;">
         <div>
@@ -595,7 +593,7 @@ class Component extends DCLogic {
       const rankAt=yrs.map(y=>{ const rows=cn.map(m=>({m,v:this.raw(met,m,c.channel,y)})).filter(r=>r.v!=null&&isFinite(r.v)).sort((x,z)=>z.v-x.v); return new Map(rows.map((r,i)=>[r.m,i+1])); });
       if(!rankAt[0].size) return this.empty(th,'No data to rank','Try a broader channel (e.g. Grand Total) or another metric.');
       const maxR=10; const markets=[...rankAt[0].entries()].filter(([,rk])=>rk<=maxR).map(([m])=>m);
-      const W=1000,H=320,padY=26; const Y=rk=>padY+((Math.min(rk,maxR+1)-1)/(maxR-1))*(H-2*padY); const xL=230,xR=W-64; const X=i=>xL+i/(yrs.length-1)*(xR-xL);
+      const W=1000,H=270,padY=26; const Y=rk=>padY+((Math.min(rk,maxR+1)-1)/(maxR-1))*(H-2*padY); const xL=230,xR=W-64; const X=i=>xL+i/(yrs.length-1)*(xR-xL);
       const heads=yrs.map((y,i)=>h('text',{key:'h'+y,x:X(i),y:12,textAnchor:'middle',fontSize:'11',fontFamily:th.fB,fontWeight:'700',fill:y>=2026?th.forecast:th.faint,letterSpacing:'1'},''+y));
       const lines=markets.map(m=>{ const rks=yrs.map((y,i)=>rankAt[i].get(m)??(maxR+1));
         const a1=rks[0], a2=rks[rks.length-1]; const col=a1===a2?th.muted:(a2<a1?th.pos:th.neg);
@@ -606,7 +604,7 @@ class Component extends DCLogic {
           ...pts.map((p,i)=>h('circle',{key:'c'+i,cx:p[0],cy:p[1],r:(i===0||i===pts.length-1)?4.5:3,fill:col})),
           h('text',{key:'t',x:xL-12,y:Y(a1)+4.5,textAnchor:'end',fontSize:'14.5',fontFamily:th.fD,fontWeight:'600',fill:th.ink},a1+'  '+m),
           h('text',{key:'r',x:xR+11,y:Y(a2)+4.5,textAnchor:'start',fontSize:'13',fontFamily:th.fM,fill:col},a2) ]); });
-      return h('svg',{viewBox:'0 0 '+W+' '+H,onMouseLeave:()=>this.hideTip(),style:{width:'100%',height:'auto',maxHeight:'23vh',display:'block'}},[...heads,...lines]); }); }
+      return h('svg',{viewBox:'0 0 '+W+' '+H,preserveAspectRatio:'xMinYMid meet',onMouseLeave:()=>this.hideTip(),style:{width:'100%',height:'auto',maxHeight:'23vh',display:'block'}},[...heads,...lines]); }); }
   // decluttered overviews
   edOverviewA(dir){ const th=T[dir], c=this.state.ctrl[dir];
     const bars=h('div',{key:'bars'},[ this.edKicker(th,'Market rankings · '+this.chanName(c.channel)+' · '+c.year), this.barRankNode(dir) ]);
