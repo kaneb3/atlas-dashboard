@@ -19,7 +19,7 @@
     --om-radius: 8px;
   }
   html, body { margin: 0; min-height: 100%; }
-  body { background: var(--om-grad); background-attachment: fixed; -webkit-font-smoothing: antialiased; font-family: 'Inter', system-ui, sans-serif; }
+  body { background: var(--om-grad); background-attachment: fixed; -webkit-font-smoothing: antialiased; font-family: 'Inter', system-ui, sans-serif; font-variant-numeric: tabular-nums; }
   @keyframes fadeUp { from { transform: translateY(16px); } to { transform: none; } }
   @keyframes fadeIn { from { opacity: 0.35; } to { opacity: 1; } }
   @keyframes growY { from { transform: scaleY(0.72); } to { transform: scaleY(1); } }
@@ -50,11 +50,12 @@
   <div id="2a" style="width: 100%; background: rgba(8, 5, 22, 0.28); border: 1px solid var(--om-border); border-radius: var(--om-radius); padding: 24px 30px 20px; color: #ffffff; font-family: 'Inter', sans-serif; box-shadow: 0 16px 48px rgba(4, 2, 14, 0.45), inset 0 1px 0 rgba(255,255,255,.07);">
     <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px; border-bottom: 1px solid var(--om-border-soft); padding-bottom: 10px;">
       <div style="display: flex; align-items: center; gap: 16px; flex-shrink: 0;">
-        <img src="./om-logo.jpg" alt="Omnicom Media Group" style="height: 120px; width: auto; display: block; object-fit: contain; border-radius: 8px;" />
+        <img src="./om-logo.jpg" alt="Omnicom Media Group" style="height: 44px; width: auto; display: block; object-fit: contain; border-radius: 6px;" />
         <div style="font-family: 'Inter', sans-serif; font-weight: 700; font-size: 36px; letter-spacing: -0.01em; color: #ffffff;">ATLAS</div>
       </div>
       <div style="font-size: 13px; color: rgba(255,255,255,.55); letter-spacing: .04em;">THE GLOBAL ADVERTISING MODEL — JUNE 2026 PREVIEW</div>
-      <div style="margin-left: auto; font-size: 13px; letter-spacing: .1em; color: rgba(255,255,255,.45); text-transform: uppercase; padding-bottom: 5px;">Global overview — <span style="color: #ffffff; font-weight: 600;">{{ v2a.marketLabel }}</span></div>
+      <div style="margin-left: auto; font-size: 13px; letter-spacing: .1em; color: rgba(255,255,255,.45); text-transform: uppercase;">Global overview — <span style="color: #ffffff; font-weight: 600;">{{ v2a.marketLabel }}</span></div>
+      <span style="font-size: 11px; letter-spacing: .16em; color: #e8c87a; border: 1px solid rgba(232,200,122,.45); padding: 4px 10px; border-radius: 3px;">CONFIDENTIAL</span>
     </div>
     <div style="display: grid; grid-template-columns: repeat(3,1fr); gap: 0; margin-bottom: 16px; border: 1px solid var(--om-border-soft); border-radius: var(--om-radius); overflow: hidden; background: rgba(8, 5, 22, 0.38);">
       <div style="padding: 14px 30px 14px 18px; border-right: 1px solid var(--om-border-soft); display: flex; align-items: baseline; gap: 14px;">
@@ -102,14 +103,14 @@ const T = {
   editorial: {
     panel:'rgba(10, 6, 28, 0.72)', panel2:'rgba(14, 8, 36, 0.82)', border:'rgba(196, 180, 240, 0.42)', borderSoft:'rgba(196, 180, 240, 0.26)',
     ink:'#ffffff', muted:'rgba(255,255,255,.68)', faint:'rgba(255,255,255,.42)',
-    accent:'#ffffff', accent2:'#c4b8f0', accentSoft:'rgba(196, 180, 240, 0.18)', segFg:'#0f0a2a',
-    pos:'#7ee8b0', neg:'#f08080', forecast:'rgba(196, 184, 240, 0.75)', forecastBand:'rgba(196, 180, 240, 0.1)',
+    accent:'#a78bfa', accent2:'#c4b8f0', accentSoft:'rgba(167, 139, 250, 0.20)', segFg:'#0f0a2a',
+    pos:'#7ee8b0', neg:'#f08080', forecast:'#e8c87a', forecastBand:'rgba(232, 200, 122, 0.08)',
     fD:"'Inter',sans-serif", fM:"'Inter',sans-serif", fB:"'Inter',sans-serif",
     shadow:'0 4px 20px rgba(4, 2, 14, 0.4), inset 0 1px 0 rgba(255,255,255,.05)',
-    mix:['#ffffff','#d4c8f8','#b8a8e8','#9b88d8','#7888c8','#6070b0','#485878'],
-    dig:['#ffffff','#c4b8f0','#9b88d8','#7888c8','#6070b0'],
-    ramp:['#0f0a2a','#1a0e38','#291848','#3d2888','#5c40a8','#9b88d0'],
-    mapNoData:'rgba(14, 8, 36, 0.9)', mapStroke:'#0f0a2a'
+    mix:['#a78bfa','#f0907a','#98a0b8','#e8c87a','#7ee8b0','#7ec8e8','#d888c8'],
+    dig:['#a78bfa','#f0907a','#e8c87a','#7ee8b0','#98a0b8'],
+    ramp:['#2e2260','#473690','#6350b8','#8a74dc','#b49af4','#e6dcff'],
+    mapNoData:'#3d3d47', mapStroke:'#0f0a2a'
   },
   prime: {
     panel:'#ffffff', panel2:'#f4f3ee', border:'#e2e0d7', borderSoft:'#ecebe3',
@@ -597,7 +598,7 @@ class Component extends DCLogic {
       const W=1000,H=320,padY=26; const Y=rk=>padY+((Math.min(rk,maxR+1)-1)/(maxR-1))*(H-2*padY); const xL=230,xR=W-64; const X=i=>xL+i/(yrs.length-1)*(xR-xL);
       const heads=yrs.map((y,i)=>h('text',{key:'h'+y,x:X(i),y:12,textAnchor:'middle',fontSize:'11',fontFamily:th.fB,fontWeight:'700',fill:y>=2026?th.forecast:th.faint,letterSpacing:'1'},''+y));
       const lines=markets.map(m=>{ const rks=yrs.map((y,i)=>rankAt[i].get(m)??(maxR+1));
-        const a1=rks[0], a2=rks[rks.length-1]; const col=a1===a2?th.muted:(a2<a1?th.accent2:th.accent);
+        const a1=rks[0], a2=rks[rks.length-1]; const col=a1===a2?th.muted:(a2<a1?th.pos:th.neg);
         const pts=rks.map((rk,i)=>[X(i),Y(rk)]);
         const d='M'+pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join('L');
         return h('g',{key:m,onClick:()=>this.canDrill(m)&&this.select(dir,m),onMouseEnter:()=>this.setHover(dir,m),onMouseMove:(e)=>this.tipMarket(dir,m,e),style:{cursor:'pointer'}},[
