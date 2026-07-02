@@ -556,15 +556,15 @@ class Component extends DCLogic {
       const head=h('div',{key:'h',style:{display:'flex',alignItems:'center',gap:'16px',marginBottom:'14px'}},[h('span',{key:'l',style:{fontSize:'12px',color:th.faint,fontFamily:th.fB,textTransform:'uppercase',letterSpacing:'.1em'}},'Rank by'),sortLink('Spend','value'),sortLink('Growth','yoy'),sortLink('Digital','digital'),toggle]);
       const domRows=[...all].sort((x,y)=>x.m.localeCompare(y.m));
       const rows=domRows.map(r=>{ const rk=rankOf.get(r.m); const hidden=rk>=visN;
-        return h('div',{key:r.m,onClick:()=>this.canDrill(r.m)&&this.select(dir,r.m),onMouseEnter:()=>this.setHover(dir,r.m),onMouseMove:(e)=>this.tipMarket(dir,r.m,e),style:{position:'absolute',left:0,right:0,top:0,height:rowH+'px',boxSizing:'border-box',display:'grid',gridTemplateColumns:'26px 158px 1fr 96px',alignItems:'center',gap:'12px',borderBottom:'1px solid '+th.borderSoft,transform:'translateY('+(rk*rowH)+'px)',transition:'transform .62s cubic-bezier(.34,1.1,.28,1), opacity .4s ease',opacity:hidden?0:1,pointerEvents:hidden?'none':'auto',cursor:this.canDrill(r.m)?'pointer':'default'}},[
+        return h('div',{key:r.m,onClick:()=>this.canDrill(r.m)&&this.select(dir,r.m),onMouseEnter:()=>this.setHover(dir,r.m),onMouseMove:(e)=>this.tipMarket(dir,r.m,e),style:{position:'absolute',left:0,right:0,top:0,height:(100/visN)+'%',boxSizing:'border-box',display:'grid',gridTemplateColumns:'26px 158px 1fr 96px',alignItems:'center',gap:'12px',borderBottom:'1px solid '+th.borderSoft,transform:'translateY('+(rk*100)+'%)',transition:'transform .62s cubic-bezier(.34,1.1,.28,1), opacity .4s ease',opacity:hidden?0:1,pointerEvents:hidden?'none':'auto',cursor:this.canDrill(r.m)?'pointer':'default'}},[
           h('span',{key:'r',style:{fontFamily:th.fD,fontSize:'15px',color:th.faint,fontWeight:600}},rk+1),
           h('span',{key:'m',style:{fontFamily:th.fD,fontSize:'17px',color:th.ink,fontWeight:600,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}},r.m),
           h('div',{key:'b',style:{position:'relative',height:'15px'}},[
             maxNeg>0&&h('div',{key:'z',style:{position:'absolute',left:base+'%',top:'-3px',bottom:'-3px',width:'1px',background:th.faint,opacity:.6}}),
             h('div',{key:'f',style:{position:'absolute',top:0,bottom:0,left:(r.value>=0?base:base-(-r.value)/span*100)+'%',width:(Math.abs(r.value)/span*100)+'%',background:r.value>=0?(maxNeg>0?th.pos:th.accent):th.neg,borderRadius:'2px',opacity:.88,transition:'width .62s cubic-bezier(.34,1.05,.3,1), left .62s cubic-bezier(.34,1.05,.3,1)'}}) ].filter(Boolean)),
           h('span',{key:'v',style:{fontFamily:th.fM,fontSize:'13.5px',color:r.value<0?th.neg:th.ink,textAlign:'right'}},this.byMetric(c.metric,r.value)) ]); });
-      const container=h('div',{onMouseLeave:()=>this.hideTip(),style:{position:'relative',height:(visN*rowH)+'px',transition:'height .62s cubic-bezier(.34,1.05,.3,1)',overflow:'hidden'}},rows);
-      return h('div',{},[head,container]); }); }
+      const container=h('div',{onMouseLeave:()=>this.hideTip(),style:{position:'relative',flex:'1 1 auto',minHeight:(visN*rowH)+'px',overflow:'hidden'}},rows);
+      return h('div',{style:{display:'flex',flexDirection:'column',flex:'1 1 auto',minHeight:0}},[head,container]); }); }
   // streamgraph channel mix
   streamNode(dir){ const th=T[dir], c=this.state.ctrl[dir], a=this.state.atlas; const mk=c.market||'World';
     const key='stream|'+dir+'|'+mk+'|'+c.mixMode+'|'+!!a;
@@ -607,9 +607,9 @@ class Component extends DCLogic {
       return h('svg',{viewBox:'0 0 '+W+' '+H,preserveAspectRatio:'xMinYMid meet',onMouseLeave:()=>this.hideTip(),style:{width:'100%',height:'auto',maxHeight:'23vh',display:'block'}},[...heads,...lines]); }); }
   // decluttered overviews
   edOverviewA(dir){ const th=T[dir], c=this.state.ctrl[dir];
-    const bars=h('div',{key:'bars'},[ this.edKicker(th,'Market rankings · '+this.chanName(c.channel)+' · '+c.year), this.barRankNode(dir) ]);
+    const bars=h('div',{key:'bars',style:{display:'flex',flexDirection:'column',minHeight:0}},[ this.edKicker(th,'Market rankings · '+this.chanName(c.channel)+' · '+c.year), this.barRankNode(dir) ]);
     const map=h('div',{key:'m'},[ this.edKicker(th,'World'), this.mapNode(dir), this.mapLegend(dir), this.edInspectorSlim(dir) ]);
-    const cols=h('div',{style:{display:'grid',gridTemplateColumns:'1.1fr 1fr',gap:'44px',alignItems:'start'}},[bars,map]);
+    const cols=h('div',{style:{display:'grid',gridTemplateColumns:'1.1fr 1fr',gap:'44px',alignItems:'stretch'}},[bars,map]);
     const stream=h('div',{key:'s'},[ this.edKickerRight(th,'Media mix · 1999–2030', this.mixToggle(dir)), this.streamNode(dir) ]);
     const byrs=this.bumpWindow(dir), bmet=this.bumpMetric(dir);
     const bump=h('div',{key:'b'},[ this.edKicker(th,'Rank shifts ’'+String(byrs[0]).slice(2)+'→’'+String(byrs[5]).slice(2)+' · '+this.chanName(c.channel)+(bmet!=='constant_usd'?' · '+this.metricWord(bmet):'')), this.bumpNode(dir) ]);
